@@ -1879,7 +1879,7 @@ export default async function build(
               '**/next/dist/pages/**/*',
               '**/next/dist/compiled/jest-worker/**/*',
               '**/next/dist/compiled/webpack/(bundle4|bundle5).js',
-              '**/node_modules/webpack5/**/*',
+              '**/node_modules/webpack/**/*',
               '**/next/dist/server/lib/squoosh/**/*.wasm',
               '**/next/dist/server/lib/route-resolver*',
               ...(ciEnvironment.hasNextSupport
