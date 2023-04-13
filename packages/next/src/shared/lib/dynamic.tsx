@@ -63,15 +63,21 @@ export function noSSR<P = {}>(
   delete loadableOptions.modules
 
   // This check is necessary to prevent react-loadable from initializing on the server
+  console.log('isServerSide', isServerSide)
   if (!isServerSide) {
     return LoadableInitializer(loadableOptions)
   }
 
   const Loading = loadableOptions.loading!
+  console.log('Loading: ', Loading)
   // This will only be rendered on the server side
-  return () => (
-    <Loading error={null} isLoading pastDelay={false} timedOut={false} />
-  )
+  return () => {
+    const el = (
+      <Loading error={null} isLoading pastDelay={false} timedOut={false} />
+    )
+    console.log('el:', el)
+    return el
+  }
 }
 
 export default function dynamic<P = {}>(
@@ -83,6 +89,7 @@ export default function dynamic<P = {}>(
   let loadableOptions: LoadableOptions<P> = {
     // A loading component is not required, so we default it
     loading: ({ error, isLoading, pastDelay }) => {
+      console.log(`Render loading: `, { error, isLoading, pastDelay })
       if (!pastDelay) return null
       if (process.env.NODE_ENV !== 'production') {
         if (isLoading) {
@@ -120,11 +127,12 @@ export default function dynamic<P = {}>(
   loadableOptions = { ...loadableOptions, ...options }
 
   const loaderFn = loadableOptions.loader as () => LoaderComponent<P>
-  const loader = () =>
-    loaderFn != null
+  const loader = () => {
+    console.log(`loader called`)
+    return loaderFn != null
       ? loaderFn().then(convertModule)
       : Promise.resolve(convertModule(() => null))
-
+  }
   // coming from build/babel/plugins/react-loadable-plugin.js
   if (loadableOptions.loadableGenerated) {
     loadableOptions = {
@@ -134,6 +142,7 @@ export default function dynamic<P = {}>(
     delete loadableOptions.loadableGenerated
   }
 
+  console.log('LoadableOptions', loadableOptions)
   // support for disabling server side rendering, eg: dynamic(() => import('../hello-world'), {ssr: false}).
   if (typeof loadableOptions.ssr === 'boolean' && !loadableOptions.ssr) {
     delete loadableOptions.webpack

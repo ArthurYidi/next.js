@@ -9,10 +9,6 @@ import {
 export default function page() {
   return (
     <div id="content">
-      <LazyClientComponent />
-      <NextDynamicServerComponent />
-      <NextDynamicClientComponent />
-      <NextDynamicServerImportClientComponent />
       <NextDynamicNoSSRServerComponent />
     </div>
   )

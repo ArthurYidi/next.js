@@ -41,7 +41,6 @@ function load(loader: any) {
     loaded: null,
     error: null,
   }
-
   state.promise = promise
     .then((loaded: any) => {
       state.loading = false
@@ -138,6 +137,14 @@ function createLoadableComponent(loadFn: any, options: any) {
     )
 
     return React.useMemo(() => {
+      console.log(
+        'LoadableComponent.state',
+        state,
+        'props',
+        props,
+        'opts',
+        opts
+      )
       if (state.loading || state.error) {
         return React.createElement(opts.loading, {
           isLoading: state.loading,
@@ -147,6 +154,7 @@ function createLoadableComponent(loadFn: any, options: any) {
           retry: subscription.retry,
         })
       } else if (state.loaded) {
+        console.log('state.loaded', state.loaded)
         return React.createElement(resolve(state.loaded), props)
       } else {
         return null
@@ -254,6 +262,7 @@ class LoadableSubscription {
 }
 
 function Loadable(opts: any) {
+  console.log(`Loadable.opts`, opts)
   return createLoadableComponent(load, opts)
 }
 
